@@ -56,6 +56,14 @@ class _HomePageState extends State<HomePage> {
               final rad = radios[index];
               return VxBox(
                 child: ZStack([
+                  Positioned(
+                    top: 0.0,
+                    right: 0.0,
+                    child: VxBox(
+                      child: rad.category.text.uppercase
+                          .white.make().p16(),
+                    ).height(40).black.alignCenter.withRounded(value: 10.0).make(),
+                  ),
                   Align(
                       alignment: Alignment.bottomCenter,
                       child: VStack(
@@ -73,8 +81,9 @@ class _HomePageState extends State<HomePage> {
                         10.heightBox,
                         "Double ap to play".text.gray300.make(),
                       ].vStack())
-                ]),
+                ], clip: Clip.antiAlias,),
               )
+              .clip(Clip.antiAlias)
                   .border(color: Colors.black.withOpacity(0.6), width: 3.0)
                   .bgImage(DecorationImage(
                       image: NetworkImage(rad.image),
@@ -83,12 +92,17 @@ class _HomePageState extends State<HomePage> {
                           Colors.black.withOpacity(0.3), BlendMode.darken)))
                   .withRounded(value: 60.0)
                   .make()
-                  .p16()
-                  .centered();
+              .onInkDoubleTap(() {})
+                  .p16();
             },
-          )
+          ).centered(),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Icon(CupertinoIcons.stop_circle),
+          ).pOnly(bottom: context.percentHeight *12)
         ],
         fit: StackFit.expand,
+        clipBehavior: Clip.antiAlias,
       ),
     );
   }
