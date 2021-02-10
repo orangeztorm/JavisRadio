@@ -1,3 +1,4 @@
+import 'package:alan_voice/alan_voice.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    setUpAlan();
     fetchRadios();
 
     _audioPlayer.onPlayerStateChanged.listen((event) {
@@ -34,9 +36,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  setUpAlan(){
+    AlanVoice.addButton(
+        "410616a5d71360a65d833387f342a7e32e956eca572e1d8b807a3e2338fdd0dc/stage",
+        buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT);
+    AlanVoice.callbacks.add((command) => _handleCommand(command.data));
+  }
+
+  _handleCommand(Map<String, dynamic> response){
+    switch(response["command"]){
+      case "play":
+        _playMusic(_selectedRadio.url);
+        break;
+      default:
+        print("command was ${response["command"]}");
+    }
+  }
+
   fetchRadios() async {
     final radioJson = await rootBundle.loadString('assets/radio.json');
     radios = MyRadioList.fromJson(radioJson).radios;
+    _selectedRadio = radios[0];
+    _selectedColor = Color(int.tryParse(_selectedRadio.color));
     print(radios);
     setState(() {});
   }
