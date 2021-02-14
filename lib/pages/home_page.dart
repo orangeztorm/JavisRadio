@@ -48,6 +48,37 @@ class _HomePageState extends State<HomePage> {
       case "play":
         _playMusic(_selectedRadio.url);
         break;
+      case "stop":
+        _audioPlayer.stop();
+        break;
+      case "next":
+        final index = _selectedRadio.id;
+        MyRadio newRadio;
+        if(index+1 > radios.length){
+          newRadio = radios.firstWhere((element) => element.id==1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }else{
+          newRadio = radios.firstWhere((element) => element.id==index+1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }
+        _playMusic(newRadio.url);
+        break;
+      case "prev":
+        final index = _selectedRadio.id;
+        MyRadio newRadio;
+        if(index - 1 <= 0){
+          newRadio = radios.firstWhere((element) => element.id==1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }else{
+          newRadio = radios.firstWhere((element) => element.id==index - 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }
+        _playMusic(newRadio.url);
+        break;
       default:
         print("command was ${response["command"]}");
     }
@@ -96,6 +127,7 @@ class _HomePageState extends State<HomePage> {
                   itemCount: radios.length,
                   aspectRatio: 1.0,
                   onPageChanged: (index) {
+                    _selectedRadio = radios[index];
                     final colorHex = radios[index].color;
                     _selectedColor = Color(int.tryParse(colorHex));
                     setState(() {});
